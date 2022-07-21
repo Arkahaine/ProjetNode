@@ -15,9 +15,12 @@ router.post(
     body('product')
       .trim()
       .isLength({ min: 5 }),
-    body('content')
+    body('description')
       .trim()
-      .isLength({ min: 5 })
+      .isLength({ min: 10 }),
+    body('price')
+      .trim()
+      .isLength({ min: 1 })
   ],
   feedController.createPost
 );
