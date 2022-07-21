@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const { validationResult } = require('express-validator/check');
 
 const Post = require('../models/post');
@@ -73,4 +76,51 @@ exports.getPost = (req, res, next) => {
       }
       next(err);
     });
+};
+
+exports.updatePost = (req, res, next) => {
+  const postId = req.params.postId;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Erreur, les données entrer sont incorrectes.');
+    error.statusCode = 422;
+    throw error;
+  }
+  const product = req.body.product;
+  const description = req.body.description;
+  const price = req.body.price;
+  let imageUrl = req.body.image;
+  if (req.file) {
+    imageUrl = req.file.path;
+  }
+  Post.findById(postId)
+    .then(post => {
+      if (!post) {
+        const error = new Error('Impossible de trouver l\'article.');
+        error.statusCode = 404;
+        throw error;
+      }
+      if (imageUrl !== post.imageUrl) {
+        clearImage(post.imageUrl);
+      }
+      if(product) post.product = product;
+      if(imageUrl) post.imageUrl = imageUrl;
+      if(description) post.description = description;
+      if(price) post.price = price;
+      return post.save();
+    })
+    .then(result => {
+      res.status(200).json({ message: 'Article mis à jour!', post: result });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+const clearImage = filePath => {
+  filePath = path.join(__dirname, '..', filePath);
+  fs.unlink(filePath, err => console.log(err));
 };

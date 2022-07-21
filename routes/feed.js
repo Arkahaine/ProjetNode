@@ -27,4 +27,23 @@ router.post(
 
 router.get('/post/:postId', feedController.getPost);
 
+router.put(
+  '/post/:postId',
+  [
+    body('product')
+      .trim()
+      .optional()
+      .isLength({ min: 5 }),
+    body('description')
+      .trim()
+      .optional()
+      .isLength({ min: 10 }),
+    body('price')
+      .trim()
+      .optional()
+      .isLength({ min: 1 })
+  ],
+  feedController.updatePost
+);
+
 module.exports = router;
