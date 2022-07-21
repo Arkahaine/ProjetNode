@@ -1,7 +1,7 @@
-const express = require('express');
-const { body } = require('express-validator/check');
+import express from 'express';
+import { body } from 'express-validator';
 
-const feedController = require('../controllers/feed');
+import feedController from '../controllers/feed.js';
 
 const router = express.Router();
 
@@ -48,4 +48,4 @@ router.put(
 
 router.delete('/post/:postId', feedController.deletePost);
 
-module.exports = router;
+export default router;

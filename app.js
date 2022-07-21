@@ -1,14 +1,17 @@
-const path = require('path');
+import path from 'path';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const multer = require('multer');
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import multer from 'multer';
+import { fileURLToPath } from 'url';
 
-const feedRoutes = require('./routes/feed');
+import feedRoutes from './routes/feed.js';
+import authRoutes from './routes/auth.js';
 
 const app = express();
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'images');
@@ -48,6 +51,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
+app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

@@ -1,11 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const { validationResult } = require('express-validator/check');
+import { validationResult } from 'express-validator';
 
-const Post = require('../models/post');
+import Post from '../models/post.js';
 
-exports.getPosts = (req, res, next) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const feedController = {};
+feedController.getPosts = (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 6;
   let totalItems;
@@ -34,7 +38,7 @@ exports.getPosts = (req, res, next) => {
     });
 };
 
-exports.createPost = (req, res, next) => {
+feedController.createPost = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Erreur, les données entrer sont incorrectes.');
@@ -73,7 +77,7 @@ exports.createPost = (req, res, next) => {
     });
 };
 
-exports.getPost = (req, res, next) => {
+feedController.getPost = (req, res, next) => {
   const postId = req.params.postId;
   Post.findById(postId)
     .then(post => {
@@ -92,7 +96,7 @@ exports.getPost = (req, res, next) => {
     });
 };
 
-exports.updatePost = (req, res, next) => {
+feedController.updatePost = (req, res, next) => {
   const postId = req.params.postId;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -134,7 +138,7 @@ exports.updatePost = (req, res, next) => {
     });
 };
 
-exports.deletePost = (req, res, next) => {
+feedController.deletePost = (req, res, next) => {
   const postId = req.params.postId;
   Post.findById(postId)
     .then(post => {
@@ -163,3 +167,5 @@ const clearImage = filePath => {
   filePath = path.join(__dirname, '..', filePath);
   fs.unlink(filePath, err => console.log(err));
 };
+
+export default feedController;
