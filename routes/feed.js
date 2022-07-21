@@ -2,11 +2,13 @@ import express from 'express';
 import { body } from 'express-validator';
 
 import feedController from '../controllers/feed.js';
+import { isAuth } from '../middleware/is-auth.js';
 
 const router = express.Router();
 
 // GET /feed/posts
-router.get('/posts', feedController.getPosts);
+// GET /feed/posts
+router.get('/posts', isAuth, feedController.getPosts);
 
 // POST /feed/post
 router.post(
@@ -21,7 +23,7 @@ router.post(
     body('price')
       .trim()
       .isLength({ min: 1 })
-  ],
+  ],isAuth,
   feedController.createPost
 );
 
