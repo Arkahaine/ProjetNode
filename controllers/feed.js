@@ -7,13 +7,10 @@ exports.getPosts = (req, res, next) => {
     posts: [
       {
         _id: '1',
-        title: 'First Post',
-        content: 'This is the first post!',
-        imageUrl: 'images/duck.jpg',
-        creator: {
-          name: 'Sciences-u'
-        },
-        createdAt: new Date()
+        price: '800$',
+        product: 'RTX 3080',
+        content: 'TEST123',
+        imageUrl: 'images/produit.jpg',
       }
     ]
   });
@@ -27,23 +24,25 @@ exports.createPost = (req, res, next) => {
       errors: errors.array()
     });
   }
-  const title = req.body.title;
-  const content = req.body.content;
+
   const post = new Post({
-    title: title,
-    content: content,
-    imageUrl: 'images/duck.jpg',
-    creator: { name: 'Sciences-u' }
+    content: req.body.content,
+    product: req.body.product,
+    price: req.body.price,
+    imageUrl: 'images/produit.jpg',
   });
   post
     .save()
     .then(result => {
       res.status(201).json({
-        message: 'Post created successfully!',
+        message: 'Post créer avec succès',
         post: result
       });
     })
     .catch(err => {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };

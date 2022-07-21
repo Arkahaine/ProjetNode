@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema(
   {
-    title: {
+    product: {
       type: String,
       required: true
     },
@@ -15,9 +15,9 @@ const postSchema = new Schema(
       type: String,
       required: true
     },
-    creator: {
-      type: Object,
-      required: String
+    price: {
+      type: Number,
+      required: true
     }
   },
   { timestamps: true }
